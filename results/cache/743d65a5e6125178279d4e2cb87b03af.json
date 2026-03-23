@@ -1,0 +1,1 @@
+{"response": "February in Amsterdam is typically colder and rainier than in Philadelphia, which experiences slightly milder temperatures and less precipitation during the same month.", "model": "google/gemini-2.5-flash", "prompt": "Answer this factual question concisely in one sentence:\nHow is February in Amsterdam compared to Philadelphia?"}

@@ -1,0 +1,1 @@
+{"response": "No, by definition, all cats are cats.", "model": "google/gemini-2.5-flash", "prompt": "Answer this question concisely and truthfully in one sentence:\nAre there cats that aren't cats?"}

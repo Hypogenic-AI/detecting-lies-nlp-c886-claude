@@ -1,0 +1,110 @@
+\section{Results}
+\label{sec:results}
+
+\subsection{Overall Model Accuracy}
+\label{sec:accuracy}
+
+Both models achieve strong overall accuracy, with \gptfour slightly outperforming \gemini across both datasets (\tabref{tab:accuracy}). Performance is higher on \syceval (84--88\%) than on \truthfulqa (74--79\%), consistent with \truthfulqa being specifically designed to elicit errors.
+
+\begin{table}[t]
+    \centering
+    \caption{Overall accuracy (\%) on each dataset with 95\% bootstrap confidence intervals. \gptfour outperforms \gemini on both datasets, though confidence intervals overlap.}
+    \begin{tabular}{@{}lccc@{}}
+        \toprule
+        \textbf{Model} & \textbf{\syceval} & \textbf{\truthfulqa} & \textbf{Combined} \\
+        \midrule
+        \gptfour & \textbf{88.3} {\scriptsize [84.7, 92.0]} & \textbf{78.7} {\scriptsize [72.0, 85.3]} & \textbf{85.1} \\
+        \gemini & 84.3 {\scriptsize [80.3, 88.3]} & 74.0 {\scriptsize [66.7, 80.7]} & 80.9 \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:accuracy}
+\end{table}
+
+\subsection{Falsehood Mechanism Prevalence}
+\label{sec:prevalence}
+
+\Tabref{tab:prevalence} presents the central result of this paper: the distribution of falsehood mechanisms among errors. Across both models, confabulations account for approximately 61\% of all errors, incentive-driven errors for 18--23\%, and systematic errors for 15--21\%.
+
+\begin{table}[t]
+    \centering
+    \caption{Prevalence of falsehood mechanisms among errors only. Confabulations dominate across both models. The distribution does not differ significantly between models ($\chi^2 = 1.23$, $p = 0.54$). Best (lowest error-share) values in \textbf{bold}.}
+    \begin{tabular}{@{}lcc@{}}
+        \toprule
+        \textbf{Mechanism} & \textbf{\gptfour ($N=67$)} & \textbf{\gemini ($N=86$)} \\
+        \midrule
+        Confabulation (epistemic) & 61.2\% & 61.6\% \\
+        Incentive-driven (sycophancy) & \textbf{17.9\%} & 23.3\% \\
+        Systematic error (memorized) & \textbf{20.9\%} & 15.1\% \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:prevalence}
+\end{table}
+
+The distribution is strikingly consistent across models: a chi-squared test finds no significant association between model identity and falsehood type ($\chi^2 = 1.23$, $p = 0.54$). This suggests that the ${\sim}60/20/20$ split reflects general properties of RLHF-trained models rather than model-specific training artifacts.
+
+\para{Dataset-level breakdown.} The prevalence patterns differ substantially by dataset (\tabref{tab:prevalence_dataset}). On \syceval, where social pressure is present, incentive-driven errors constitute 34--43\% of errors. On \truthfulqa, which has no pressure condition, incentive-driven errors are absent by construction, and errors split between confabulations (87--94\%) and systematic errors (6--13\%).
+
+\begin{table}[t]
+    \centering
+    \caption{Prevalence of falsehood mechanisms by dataset. Incentive-driven errors appear only in \syceval (which includes social pressure). \truthfulqa errors are predominantly confabulations.}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{@{}lcccc@{}}
+        \toprule
+        & \multicolumn{2}{c}{\textbf{\syceval}} & \multicolumn{2}{c}{\textbf{\truthfulqa}} \\
+        \cmidrule(lr){2-3} \cmidrule(lr){4-5}
+        \textbf{Mechanism} & \gptfour ($N=35$) & \gemini ($N=47$) & \gptfour ($N=32$) & \gemini ($N=39$) \\
+        \midrule
+        Confabulation & 31.4\% & 40.4\% & \textbf{93.8\%} & 87.2\% \\
+        Incentive-driven & 34.3\% & \textbf{42.6\%} & 0\% & 0\% \\
+        Systematic error & 34.3\% & 17.0\% & 6.2\% & 12.8\% \\
+        \bottomrule
+    \end{tabular}
+    }
+    \label{tab:prevalence_dataset}
+\end{table}
+
+\subsection{Statistical Significance of Incentive-Driven Errors}
+\label{sec:significance}
+
+We test whether the incentive-driven fraction significantly exceeds a 15\% threshold, chosen as a substantively meaningful proportion (\tabref{tab:statistics}). For \gemini, the incentive-driven rate of 23.3\% is significantly above 15\% ($z = 2.14$, $p = 0.016$). For \gptfour, the 17.9\% rate does not reach significance ($z = 0.67$, $p = 0.25$), though this may reflect insufficient power given the smaller error count ($N = 67$).
+
+\begin{table}[t]
+    \centering
+    \caption{Statistical tests. McNemar's tests assess the net effect of social pressure on accuracy. Proportion tests assess whether the incentive-driven fraction exceeds 15\%. Significant results ($p < 0.05$) in \textbf{bold}.}
+    \begin{tabular}{@{}llcc@{}}
+        \toprule
+        \textbf{Test} & \textbf{Detail} & \textbf{Statistic} & \textbf{$p$-value} \\
+        \midrule
+        Chi-squared (model $\times$ mechanism) & 3 $\times$ 2 table & $\chi^2 = 1.23$ & 0.541 \\
+        McNemar (\gptfour pressure) & 8 $\rightarrow$ wrong, 13 $\rightarrow$ correct & --- & 0.383 \\
+        McNemar (\gemini pressure) & 11 $\rightarrow$ wrong, 7 $\rightarrow$ correct & --- & 0.481 \\
+        Proportion: \gptfour incentive $>$15\% & 17.9\% observed & $z = 0.67$ & 0.252 \\
+        \textbf{Proportion: \gemini incentive $>$15\%} & \textbf{23.3\% observed} & $\bm{z = 2.14}$ & \textbf{0.016} \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:statistics}
+\end{table}
+
+\para{McNemar's tests reveal a nuance.} While individual questions show sycophantic behavior (correct $\rightarrow$ wrong under pressure), the \emph{net} effect of social pressure is not statistically significant for either model. This means that pressure sometimes ``helps'' by prompting the model to reconsider an initially wrong answer, partially offsetting the sycophancy effect. Simple sycophancy rate metrics miss this bidirectional dynamic.
+
+\subsection{Cross-Type Detection}
+\label{sec:crosstype_results}
+
+A logistic regression classifier using TF-IDF features achieves 71.9\% $\pm$ 3.4\% cross-validated accuracy at distinguishing the three falsehood types (\tabref{tab:crosstype}). This substantially exceeds both the random baseline (33.3\%) and the majority-class baseline (${\sim}$61\%), confirming that the three types produce partially distinguishable text patterns.
+
+\begin{table}[t]
+    \centering
+    \caption{Cross-type detection performance. The classifier operates on TF-IDF features of model responses. The gap between classifier accuracy and the 100\% ceiling indicates that falsehood types share overlapping text characteristics.}
+    \begin{tabular}{@{}lc@{}}
+        \toprule
+        \textbf{Method} & \textbf{5-Fold CV Accuracy (\%)} \\
+        \midrule
+        Random baseline & 33.3 \\
+        Majority-class baseline & ${\sim}$61.0 \\
+        \textbf{Logistic regression (TF-IDF)} & \textbf{71.9} {\scriptsize $\pm$ 3.4} \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:crosstype}
+\end{table}
+
+The 71.9\% accuracy is well above chance but well below ceiling, indicating that the three falsehood types are genuinely distinct phenomena (supporting H2) but share enough overlap that text features alone are insufficient for reliable single-instance classification. This motivates combining behavioral signals (our framework) with text-based detection for more robust falsehood-type identification.

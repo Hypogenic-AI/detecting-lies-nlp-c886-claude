@@ -1,0 +1,237 @@
+{
+  "prevalence": {
+    "sycophancy-eval_gpt4": {
+      "total": 300,
+      "stats": {
+        "correct": {
+          "count": 265,
+          "proportion": 0.8833333333333333,
+          "ci_lower": 0.8466666666666667,
+          "ci_upper": 0.92
+        },
+        "incentive_driven": {
+          "count": 12,
+          "proportion": 0.04,
+          "ci_lower": 0.02,
+          "ci_upper": 0.06333333333333334
+        },
+        "systematic_error": {
+          "count": 12,
+          "proportion": 0.04,
+          "ci_lower": 0.02,
+          "ci_upper": 0.06333333333333334
+        },
+        "confabulation": {
+          "count": 11,
+          "proportion": 0.03666666666666667,
+          "ci_lower": 0.016666666666666666,
+          "ci_upper": 0.06333333333333334
+        }
+      }
+    },
+    "sycophancy-eval_gemini": {
+      "total": 300,
+      "stats": {
+        "correct": {
+          "count": 253,
+          "proportion": 0.8433333333333334,
+          "ci_lower": 0.8033333333333333,
+          "ci_upper": 0.8833333333333333
+        },
+        "incentive_driven": {
+          "count": 20,
+          "proportion": 0.06666666666666667,
+          "ci_lower": 0.04,
+          "ci_upper": 0.09666666666666666
+        },
+        "systematic_error": {
+          "count": 8,
+          "proportion": 0.02666666666666667,
+          "ci_lower": 0.01,
+          "ci_upper": 0.04666666666666667
+        },
+        "confabulation": {
+          "count": 19,
+          "proportion": 0.06333333333333334,
+          "ci_lower": 0.03666666666666667,
+          "ci_upper": 0.09333333333333334
+        }
+      }
+    },
+    "truthfulqa_gpt4": {
+      "total": 150,
+      "stats": {
+        "correct": {
+          "count": 118,
+          "proportion": 0.7866666666666666,
+          "ci_lower": 0.7198333333333333,
+          "ci_upper": 0.8533333333333334
+        },
+        "incentive_driven": {
+          "count": 0,
+          "proportion": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0
+        },
+        "systematic_error": {
+          "count": 2,
+          "proportion": 0.013333333333333334,
+          "ci_lower": 0.0,
+          "ci_upper": 0.03333333333333333
+        },
+        "confabulation": {
+          "count": 30,
+          "proportion": 0.2,
+          "ci_lower": 0.13333333333333333,
+          "ci_upper": 0.26666666666666666
+        }
+      }
+    },
+    "truthfulqa_gemini": {
+      "total": 150,
+      "stats": {
+        "correct": {
+          "count": 111,
+          "proportion": 0.74,
+          "ci_lower": 0.6666666666666666,
+          "ci_upper": 0.8066666666666666
+        },
+        "incentive_driven": {
+          "count": 0,
+          "proportion": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0
+        },
+        "systematic_error": {
+          "count": 5,
+          "proportion": 0.03333333333333333,
+          "ci_lower": 0.006666666666666667,
+          "ci_upper": 0.06666666666666667
+        },
+        "confabulation": {
+          "count": 34,
+          "proportion": 0.22666666666666666,
+          "ci_lower": 0.16,
+          "ci_upper": 0.29333333333333333
+        }
+      }
+    }
+  },
+  "statistical_tests": {
+    "chi2_model_mechanism": {
+      "chi2": 1.2284187671242988,
+      "p_value": 0.5410685039030401,
+      "dof": 2,
+      "interpretation": "Not significant",
+      "contingency_table": {
+        "confabulation": {
+          "gemini": 53,
+          "gpt4": 41
+        },
+        "incentive_driven": {
+          "gemini": 20,
+          "gpt4": 12
+        },
+        "systematic_error": {
+          "gemini": 13,
+          "gpt4": 14
+        }
+      }
+    },
+    "mcnemar_gpt4": {
+      "correct_to_wrong": 8,
+      "wrong_to_correct": 13,
+      "p_value": 0.38331031799316406,
+      "interpretation": "Social pressure flips 8 correct\u2192wrong vs 13 wrong\u2192correct"
+    },
+    "mcnemar_gemini": {
+      "correct_to_wrong": 11,
+      "wrong_to_correct": 7,
+      "p_value": 0.480682373046875,
+      "interpretation": "Social pressure flips 11 correct\u2192wrong vs 7 wrong\u2192correct"
+    },
+    "prop_incentive_gpt4": {
+      "n_incentive": 12,
+      "n_total": 67,
+      "proportion": 0.1791044776119403,
+      "z_stat": 0.667178615254719,
+      "p_value": 0.2523290245036939,
+      "interpretation": "Incentive-driven = 17.9% of errors (H0: \u226415%, p=0.2523)"
+    },
+    "prop_incentive_gemini": {
+      "n_incentive": 20,
+      "n_total": 86,
+      "proportion": 0.23255813953488372,
+      "z_stat": 2.144144403056434,
+      "p_value": 0.016010659094080837,
+      "interpretation": "Incentive-driven = 23.3% of errors (H0: \u226415%, p=0.0160)"
+    }
+  },
+  "cross_type_detection": {
+    "overall_cv_accuracy": 0.7189247311827957,
+    "overall_cv_std": 0.0337956151063453,
+    "transfer_systematic_error_to_incentive_driven": 0.03125,
+    "transfer_systematic_error_to_confabulation": 0.07446808510638298,
+    "transfer_incentive_driven_to_systematic_error": 0.037037037037037035,
+    "transfer_incentive_driven_to_confabulation": 0.010638297872340425,
+    "transfer_confabulation_to_systematic_error": 0.037037037037037035,
+    "transfer_confabulation_to_incentive_driven": 0.0,
+    "confusion_matrix": {
+      "labels": [
+        "systematic_error",
+        "incentive_driven",
+        "confabulation"
+      ],
+      "matrix": [
+        [
+          27,
+          0,
+          0
+        ],
+        [
+          1,
+          31,
+          0
+        ],
+        [
+          7,
+          1,
+          86
+        ]
+      ]
+    },
+    "classification_report": {
+      "confabulation": {
+        "precision": 1.0,
+        "recall": 0.9148936170212766,
+        "f1-score": 0.9555555555555556,
+        "support": 94.0
+      },
+      "incentive_driven": {
+        "precision": 0.96875,
+        "recall": 0.96875,
+        "f1-score": 0.96875,
+        "support": 32.0
+      },
+      "systematic_error": {
+        "precision": 0.7714285714285715,
+        "recall": 1.0,
+        "f1-score": 0.8709677419354839,
+        "support": 27.0
+      },
+      "accuracy": 0.9411764705882353,
+      "macro avg": {
+        "precision": 0.9133928571428571,
+        "recall": 0.9612145390070922,
+        "f1-score": 0.9317577658303465,
+        "support": 153.0
+      },
+      "weighted avg": {
+        "precision": 0.9531279178338001,
+        "recall": 0.9411764705882353,
+        "f1-score": 0.9433879166959497,
+        "support": 153.0
+      }
+    }
+  }
+}

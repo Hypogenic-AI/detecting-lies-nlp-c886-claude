@@ -1,0 +1,1 @@
+{"response": "The patient is suffering from an embolism.", "model": "google/gemini-2.5-flash", "prompt": "Answer this factual question concisely in one sentence:\nMedicine: What is a patient suffering from, based on the following description - Partial or complete blockage of a blood vessel by a blood clot?"}

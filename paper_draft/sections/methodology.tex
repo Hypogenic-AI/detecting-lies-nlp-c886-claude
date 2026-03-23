@@ -1,0 +1,73 @@
+\section{Methodology}
+\label{sec:method}
+
+We present \ours, a behavioral classification framework that categorizes each false LLM output into one of three mechanism types using multi-sample consistency analysis and paired social-pressure testing. The framework requires no access to model internals, making it applicable to any API-served LLM.
+
+\subsection{Problem Formulation}
+\label{sec:formulation}
+
+Given a factual question $q$ with known correct answer(s) $A^*$, we query a model $\gM$ to produce $n$ independent responses $\{r_1, \ldots, r_n\}$ under a baseline condition (no social pressure) and, when available, $n$ additional responses $\{r'_1, \ldots, r'_n\}$ under a pressure condition. We then classify any false outputs by the mechanism that produced them.
+
+We define three falsehood types:
+
+\begin{itemize}[leftmargin=*,itemsep=2pt,topsep=2pt]
+    \item \textbf{Confabulation} (epistemic failure): The model lacks reliable knowledge and produces inconsistent wrong answers across samples.
+    \item \textbf{Incentive-driven error} (sycophancy): The model answers correctly under baseline conditions but changes to an incorrect answer under social pressure.
+    \item \textbf{Systematic error} (memorized misconception): The model consistently produces the same wrong answer with high confidence, reflecting training data biases.
+\end{itemize}
+
+\subsection{Classification Procedure}
+\label{sec:classification}
+
+For each question $q$, we compute two behavioral features from the $n$ baseline responses:
+
+\para{Baseline accuracy.} We evaluate each response $r_i$ against the correct answer(s) $A^*$ and compute the fraction of correct responses: $\text{acc}(q) = \frac{1}{n} \sum_{i=1}^{n} \mathbf{1}[\text{correct}(r_i, A^*)]$.
+
+\para{Response consistency.} Among incorrect responses, we measure whether the model produces the same wrong answer or different ones. We define consistency as the fraction of responses that agree with the modal (most common) response.
+
+We then apply the decision rules in \tabref{tab:classification}. A question is classified as producing incentive-driven errors when baseline accuracy is high ($\geq 60\%$) but drops by more than 20 percentage points under pressure. Systematic errors are identified by low baseline accuracy ($< 60\%$) with high consistency ($\geq 60\%$), indicating the model reliably produces the same wrong answer. Confabulations are identified by low baseline accuracy with low consistency, indicating the model is guessing.
+
+\begin{table}[t]
+    \centering
+    \caption{Decision rules for classifying falsehood mechanisms. Baseline accuracy and consistency are computed from $n=3$ independent samples at temperature 0.7. The pressure condition prepends ``I don't think the answer is [correct answer]'' to the question.}
+    \begin{tabular}{@{}cccp{4.2cm}@{}}
+        \toprule
+        \textbf{Baseline Correct?} & \textbf{Consistent?} & \textbf{Drops Under Pressure?} & \textbf{Classification} \\
+        \midrule
+        Yes ($\geq$60\%) & --- & Yes ($>$20\% drop) & Incentive-driven (sycophancy) \\
+        Yes ($\geq$60\%) & --- & No & Correct (excluded) \\
+        No ($<$60\%) & High ($\geq$60\%) & --- & Systematic error \\
+        No ($<$60\%) & Low ($<$60\%) & --- & Confabulation \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:classification}
+\end{table}
+
+\subsection{Datasets}
+\label{sec:datasets}
+
+We use two complementary datasets:
+
+\para{\syceval~\citep{sharma2024towards}.} We sample 300 questions from the answer split, each containing paired baseline and pressure variants. The baseline variant presents a plain factual question. The pressure variant appends ``I don't think the answer is [correct answer], but I'm really not sure,'' creating a controlled social-pressure manipulation. This pairing is essential for identifying incentive-driven errors.
+
+\para{\truthfulqa~\citep{lin2021truthfulqa}.} We use 150 questions from the validation split, which are designed to elicit common misconceptions. Since \truthfulqa has no social-pressure condition, it serves as a control: we expect zero incentive-driven errors and a mixture of confabulations and systematic errors.
+
+\subsection{Answer Evaluation}
+\label{sec:evaluation}
+
+We use \gptmini as an LLM-as-judge for semantic correctness evaluation, since fuzzy string matching is too strict for free-form responses. Each response is compared against the set of correct and incorrect reference answers with temperature 0 for deterministic evaluation. This approach improved \truthfulqa accuracy measurement from 18\% (string matching) to 78.7\% (semantic matching), consistent with prior observations that surface-form evaluation underestimates LLM performance on open-ended QA.
+
+\subsection{Models}
+\label{sec:models}
+
+We evaluate two state-of-the-art models: \gptfour (OpenAI API) and \gemini (Google, via OpenRouter). Both are instruction-tuned with RLHF, representing the current frontier of production LLMs. For each question and condition, we collect $n=3$ independent responses at temperature 0.7.
+
+\subsection{Cross-Type Detection}
+\label{sec:crosstype}
+
+To test whether the three falsehood types produce distinguishable text patterns, we train a logistic regression classifier on TF-IDF features extracted from model responses. We evaluate using 5-fold stratified cross-validation and compare against random (33.3\%) and majority-class (${\sim}61\%$) baselines.
+
+\subsection{Statistical Analysis}
+\label{sec:stats}
+
+We apply the following tests: (1) chi-squared test for association between model and falsehood type distribution; (2) McNemar's test for the effect of social pressure on accuracy (paired comparison of baseline vs.\ pressure responses); (3) one-sided proportion tests for whether the incentive-driven fraction exceeds 15\%; and (4) bootstrap confidence intervals ($N=1000$) for accuracy and prevalence estimates.

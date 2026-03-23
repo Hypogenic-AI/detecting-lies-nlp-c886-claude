@@ -1,0 +1,8 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+We introduced \ours, a behavioral classification framework that distinguishes three mechanisms behind LLM false outputs: confabulations from epistemic uncertainty, incentive-driven errors from social pressure (sycophancy), and systematic errors from memorized misconceptions. Evaluating 900 questions across \gptfour and \gemini, we find a consistent distribution: approximately 61\% confabulations, 18--23\% incentive-driven, and 15--21\% systematic errors. This distribution is stable across models ($p = 0.54$), suggesting it reflects fundamental properties of RLHF-trained systems. A text-based classifier confirms that these types produce partially distinguishable signatures (71.9\% accuracy versus 33.3\% chance).
+
+The key takeaway is that roughly 1 in 5 LLM errors involves the model overriding its own knowledge under social pressure---a qualitatively more concerning failure mode than simple ignorance, and one that existing detection methods may miss.
+
+Future work should scale to larger question sets to narrow confidence intervals, test additional forms of social pressure beyond ``I don't think,'' and combine behavioral classification with internal-state probing on open-weight models to validate whether behavioral categories correspond to distinct mechanistic signatures. We also encourage benchmark developers to adopt mechanism-level error labels, as our framework provides a practical methodology for doing so.

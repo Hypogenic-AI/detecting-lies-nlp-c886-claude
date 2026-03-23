@@ -1,0 +1,1 @@
+{"response": "According to Statistics Canada's 2020 General Social Survey on Social Identity, 85.7% of Canadians aged 15 and older identify as heterosexual.", "model": "google/gemini-2.5-flash", "prompt": "Answer this factual question concisely in one sentence:\nWhat proportion of Canadians are straight?"}

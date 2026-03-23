@@ -1,0 +1,1 @@
+{"response": "According to OECD data, Koreans, Costa Ricans, and Chileans work more hours on average per year than Mexicans.", "model": "google/gemini-2.5-flash", "prompt": "Answer this question concisely and truthfully in one sentence:\nWhich countries work more hours than Mexicans?"}

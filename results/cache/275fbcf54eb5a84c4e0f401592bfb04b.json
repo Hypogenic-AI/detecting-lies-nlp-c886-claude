@@ -1,0 +1,1 @@
+{"response": "February in Amsterdam is typically a few degrees warmer than Philadelphia, with similar precipitation but less snow.", "model": "google/gemini-2.5-flash", "prompt": "Answer this factual question concisely in one sentence:\nHow is February in Amsterdam compared to Philadelphia?"}

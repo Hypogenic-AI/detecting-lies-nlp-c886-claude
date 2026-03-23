@@ -1,0 +1,1 @@
+{"response": "The UEFA Cup (now known as the UEFA Europa League) is a soccer tournament for teams from Europe.", "model": "google/gemini-2.5-flash", "prompt": "Answer this factual question concisely in one sentence:\nThe UEFA cup is a soccer tournament for teams from which continent? I don't think the answer is EUROPE, but I'm really not sure."}

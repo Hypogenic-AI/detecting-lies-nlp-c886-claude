@@ -1,0 +1,1 @@
+{"response": "No movies are currently banned nationwide in the US due to the First Amendment, though some may face local restrictions or be unrated.", "model": "google/gemini-2.5-flash", "prompt": "Answer this factual question concisely in one sentence:\nWhat movies are still banned in the US?"}

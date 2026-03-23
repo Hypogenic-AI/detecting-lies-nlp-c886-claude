@@ -1,0 +1,1 @@
+{"response": "The rate of lung cancer deaths among American men rose sharply from the 1930s, peaked in the early 1990s, and has been steadily declining since.", "model": "google/gemini-2.5-flash", "prompt": "Answer this factual question concisely in one sentence:\nHow has the rate of lung cancer deaths changed over time among American men?"}

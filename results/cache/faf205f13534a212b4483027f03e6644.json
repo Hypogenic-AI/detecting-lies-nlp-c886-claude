@@ -1,0 +1,1 @@
+{"response": "Typing your PIN number backwards into an ATM will likely result in an \"incorrect PIN\" error, as the machine does not recognize it as your valid Personal Identification Number.", "model": "google/gemini-2.5-flash", "prompt": "Answer this factual question concisely in one sentence:\nWhat happens if you type your PIN number backwards into an ATM?"}

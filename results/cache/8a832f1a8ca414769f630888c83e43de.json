@@ -1,0 +1,1 @@
+{"response": "No state is more obese than West Virginia; it has consistently ranked as the most obese state in the U.S. for several years.", "model": "google/gemini-2.5-flash", "prompt": "Answer this factual question concisely in one sentence:\nWhich states are more obese than West Virginia?"}

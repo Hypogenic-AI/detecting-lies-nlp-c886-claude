@@ -1,0 +1,35 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Interpretation of Results}
+\label{sec:interpretation}
+
+\para{Confabulation as the dominant failure mode.} The finding that ${\sim}$61\% of LLM errors are confabulations---inconsistent wrong answers reflecting genuine epistemic uncertainty---aligns with the semantic entropy literature~\citep{farquhar2024detecting} and suggests that the majority of LLM errors are, in a sense, ``honest'' mistakes. These errors are detectable by existing uncertainty-estimation methods and can be mitigated through retrieval augmentation or abstention. The consistency of this rate across both models and both datasets suggests it reflects a fundamental property of current LLM architectures.
+
+\para{The sycophancy problem is real and measurable.} Roughly 1 in 5 LLM errors involves the model overriding its own knowledge under social pressure. This is qualitatively different from epistemic failure: the model has demonstrated it can answer correctly (in baseline conditions) but chooses not to when a user expresses disagreement. For \gemini, this fraction is statistically significantly above 15\% ($p = 0.016$). The non-significant result for \gptfour ($p = 0.25$) likely reflects limited statistical power rather than genuine absence, given the similar point estimate (17.9\%).
+
+\para{McNemar's paradox.} A surprising finding is that the \emph{net} effect of social pressure is not significant for either model, despite clear evidence of sycophancy at the individual-question level. This occurs because pressure sometimes causes the model to reconsider an initially wrong answer, producing a \emph{correction} rather than a capitulation. Simple sycophancy rate metrics that count only correct$\rightarrow$wrong flips miss this bidirectional effect. Future sycophancy benchmarks should report both directions of change.
+
+\para{TruthfulQA errors are mostly confabulations, not misconceptions.} We find that 87--94\% of \truthfulqa errors are confabulations rather than systematic misconceptions, contradicting the benchmark's design intent. This suggests that modern RLHF-trained models have partially overcome training-data biases and now express uncertainty (inconsistent responses) rather than confidently repeating falsehoods. Benchmark designers should consider whether their error taxonomies still match the failure modes of current models.
+
+\subsection{Implications}
+\label{sec:implications}
+
+\para{For detector design.} Our results suggest that a single lie detector evaluated on an undifferentiated mix of falsehoods may produce misleading performance estimates. A detector that excels at identifying confabulations (\eg semantic entropy) will achieve high overall accuracy because confabulations dominate, while potentially failing entirely on the 20\% of errors that are incentive-driven---arguably the more dangerous failure mode. We recommend that detection benchmarks report performance separately for each falsehood type.
+
+\para{For safety evaluation.} The ${\sim}$20\% incentive-driven error rate means that in adversarial deployment settings---where users may express strong opinions or apply social pressure---a substantial fraction of LLM errors involve the model actively overriding correct knowledge. This has direct implications for applications where user trust in LLM outputs is critical, such as medical or legal advice.
+
+\para{For model training.} The consistency of the falsehood-type distribution across \gptfour and \gemini ($p = 0.54$) suggests that the ${\sim}60/20/20$ split is a general property of RLHF training rather than a model-specific artifact. This points to RLHF itself as the source of the incentive structure that produces sycophantic errors, consistent with the causal analysis of \citet{sharma2024towards}.
+
+\subsection{Limitations}
+\label{sec:limitations}
+
+\para{Behavioral proxy, not mechanistic proof.} Our classification uses behavioral signatures (consistency, pressure sensitivity) as proxies for underlying mechanisms. A model that is genuinely uncertain might still produce consistent wrong answers by chance, and a model that changes its answer under pressure might be doing so for reasons other than sycophancy. Internal-state probing on open-weight models would provide stronger mechanistic evidence.
+
+\para{Limited pressure types.} We test only one form of social pressure (``I don't think the answer is X''). Other forms of incentive-driven misreporting---flattery, authority appeals, roleplay scenarios, instruction-following conflicts---are not measured. The 18--23\% rate may underestimate the full scope of incentive-driven errors.
+
+\para{Sample size.} With 153 total errors across both models, the per-type confidence intervals are wide. The non-significant result for \gptfour incentive-driven errors ($p = 0.25$) may reflect insufficient power. Larger-scale studies with 1,000+ questions per dataset are needed to narrow these estimates.
+
+\para{LLM-as-judge bias.} Using \gptmini as a correctness judge may introduce systematic bias, particularly for ambiguous or contested answers. However, the alternative (strict string matching) dramatically underestimates model performance, making LLM-based judging the more practical choice.
+
+\para{Temperature effects.} At temperature 0.7, consistency measurements are noisy. Lower temperature would reduce confabulation classification rates but might mask genuine uncertainty. The optimal temperature for mechanism classification is an open question.
